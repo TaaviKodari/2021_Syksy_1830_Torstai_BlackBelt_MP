@@ -9,15 +9,24 @@ using Photon.Pun;
 public class CreateAndJoinRoom : MonoBehaviourPunCallbacks
 {
     public TMP_InputField createInput;
-    // Start is called before the first frame update
-    void Start()
+    public TMP_InputField joinInput;
+
+
+    public void CreateRoom()
     {
-        
+        //Tällä käskyllä luodaan serverille uusi huone
+        PhotonNetwork.CreateRoom(createInput.text);
     }
 
-    // Update is called once per frame
-    void Update()
+    public void JoinRoom()
     {
-        
+        //Tällä käskyllä liitytään valmiina olevaan huoneeseen
+        PhotonNetwork.JoinRoom(joinInput.text);
+    }
+
+
+    public override void OnJoinedRoom()
+    {
+        PhotonNetwork.LoadLevel("Game");
     }
 }
