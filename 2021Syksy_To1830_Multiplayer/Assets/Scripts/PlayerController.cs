@@ -16,16 +16,30 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private bool isGrounded;
     
+    private Vector3 velocity;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        controller = GetComponent<CharacterController>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        CheckIfGrounded();
+    }
+
+    private void CheckIfGrounded()
+    {
+        isGrounded = Physics.CheckSphere(groundCheck.position,groundDistance, groundMask);
+
+        if(isGrounded)
+        {
+            velocity.y = -2;
+        }
+
+        velocity.y +=  gravity * Time.deltaTime;
+        controller.Move(velocity * Time.deltaTime);
     }
 }
