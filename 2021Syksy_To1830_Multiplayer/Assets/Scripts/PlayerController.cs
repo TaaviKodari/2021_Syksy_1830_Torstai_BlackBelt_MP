@@ -18,6 +18,8 @@ public class PlayerController : MonoBehaviour
     
     private Vector3 velocity;
 
+    private Vector3 moveDir; 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,6 +30,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         CheckIfGrounded();
+        Move();
     }
 
     private void CheckIfGrounded()
@@ -41,5 +44,22 @@ public class PlayerController : MonoBehaviour
 
         velocity.y +=  gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
+    }
+
+    private void Move()
+    {
+        float xAxis = Input.GetAxis("Horizontal");
+        float zAxis = Input.GetAxis("Vertical");
+
+        moveDir = transform.right * xAxis + transform.forward *zAxis;
+
+        float targetSpeed = Input.GetButton("Fire1") ? runSpeed : moveSpeed;          
+
+        if(moveDir == Vector3.zero)
+        {
+            targetSpeed = 0;
+        }
+
+        controller.Move(moveDir * targetSpeed * Time.deltaTime);
     }
 }
