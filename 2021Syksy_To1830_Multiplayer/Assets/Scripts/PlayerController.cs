@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -13,7 +14,7 @@ public class PlayerController : MonoBehaviour
     public Transform groundCheck;
     public float groundDistance = 0.1f;
     public LayerMask groundMask;
-
+    public Animator animator;
     [SerializeField] private bool isGrounded;
     
     private Vector3 velocity;
@@ -31,12 +32,24 @@ public class PlayerController : MonoBehaviour
     {
         CheckIfGrounded();
         Move();
+        Jump();
+    }
+
+    private void Jump()
+    {
+        if(Input.GetButtonDown("Jump") && isGrounded)
+        {
+            velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
+        }
+
+        velocity.y += gravity * Time.deltaTime;
+        controller.Move(velocity * Time.deltaTime);
     }
 
     private void CheckIfGrounded()
     {
         isGrounded = Physics.CheckSphere(groundCheck.position,groundDistance, groundMask);
-
+        animator.SetBool("Grounded",isGrounded);
         if(isGrounded)
         {
             velocity.y = -2;
@@ -59,7 +72,7 @@ public class PlayerController : MonoBehaviour
         {
             targetSpeed = 0;
         }
-
+        animator.SetFloat("Speed",targetSpeed);
         controller.Move(moveDir * targetSpeed * Time.deltaTime);
     }
 }
